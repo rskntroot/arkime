@@ -20,6 +20,11 @@ Arkime on Docker with role based on entrypoint script. (Roles: Viewer, Capture, 
 ### - 2. Viewer
 `docker run -d --name arkime-viewer -e ELASTIC_HOST="$HOSTNAME" -e ARKIME_USER="$USERNAME" -e ARKIME_PSWD="$PASSWORD" -p 80:8005 rskntroot/arkime:2.7.1 /opt/arkime/bin/viewer.sh`
 
+### - 3. Import
+Place .pcap files in `/opt/docker/arkime/import/`
+
+`docker run -d --name arkime-import -e ELASTIC_HOST="$HOSTNAME" -v /opt/docker/arkime/import/:/import/ rskntroot/arkime:2.7.1 /opt/arkime/bin/import.sh`
+
 > (default creds - admin:password)
 
 # Recommendations
