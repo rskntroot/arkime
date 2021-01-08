@@ -9,8 +9,7 @@
 docker run -d --name elasticsearch -e "discovery.type=single-node" elasticsearch:7.10.1
 
 # Build Image
-cd ~/arkime
-docker build -t rskntroot/arkime:2.7.1 .
+cd ~/arkime && docker build -t rskntroot/arkime:2.7.1 .
 
 # available roles
 ### - 1. Setup (Initialize ElasticSearch)
