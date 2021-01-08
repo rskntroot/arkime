@@ -17,12 +17,7 @@ Arkime on Docker with role based on entrypoint script. (Roles: Viewer, Capture, 
 `docker rm arkime-es-init`
 
 ### - 2. Viewer
-` docker run -d --name arkime-viewer \`
-`    -e ELASTIC_HOST="$HOSTNAME" \`
-`    -e ARKIME_USER="$USERNAME" \`
-`    -e ARKIME_PSWD="$PASSWORD" \`
-`    -p 80:8005 \`
-`    rskntroot/arkime:2.7.1 /opt/arkime/bin/viewer.sh`
+`docker run -d --name arkime-viewer -e ELASTIC_HOST="$HOSTNAME" -e ARKIME_USER="$USERNAME" -e ARKIME_PSWD="$PASSWORD" -p 80:8005 rskntroot/arkime:2.7.1 /opt/arkime/bin/viewer.sh`
 
 > (default creds - admin:password)
 
