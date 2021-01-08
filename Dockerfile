@@ -10,7 +10,7 @@ RUN mkdir /data && cd /data && curl -C - "https://s3.amazonaws.com/files.molo.ch
 
 RUN mkdir -p /opt/arkime/logs /opt/arkime/bin
 ADD /scripts /opt/arkime/bin
-RUN cd /opt/arkime/bin && chmod 755 ./capture.sh ./config.sh ./import.sh ./viewer.sh
+RUN cd /opt/arkime/bin && chmod 755 ./capture.sh ./config.sh ./import.sh ./setup.sh ./viewer.sh
 
 ENV ARKIME_DIR "/data/moloch"
 EXPOSE 8005/tcp
