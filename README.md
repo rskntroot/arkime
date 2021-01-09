@@ -1,31 +1,43 @@
-# Arkime v2.7.1 in Docker (Ubuntu 20.04)
+# Docker Arkime v2.7.1-1
 
-Arkime on Docker with role based on entrypoint script. (Roles: Viewer, Capture, Import)
+Arkime on Docker with container role based on entrypoint script. 
 
 > IN PROGRESS - feel free to leave a comment and ill try to hurry up.
 
-# Prerequisites
-### ElasticSearch Backend:
-`docker run -d --name elasticsearch -e "discovery.type=single-node" elasticsearch:7.10.1`
+### Prerequisites
+> docker-compose
+`docker pull elasticsearch:7.10.1`
 
-# Build Image
-`cd ~/arkime && docker build -t rskntroot/arkime:2.7.1 .`
+`docker pull nginx:mainline-alpine`
+
+### Run the Project
+`cd ~/arkime`
+
+`docker build -t rskntroot/arkime:2.7.1-1 .`
+
+`docker-compose up -d`
 
 # Available roles
-### - 1. Setup (Initialize ElasticSearch)
-`docker run -d --name arkime-es-init -e ELASTIC_HOST="$HOSTNAME" rskntroot/arkime:2.7.1 /opt/arkime/bin/setup.sh`
+### - 1. Viewer
+> ARKIME_USER
+> ARKIME_PSWD
+> VOLUME $LOG_DIR:/opt/arkime/log
+> ENTRYPOINT /opt/arkime/bin/viewer.sh`
 
-`docker rm arkime-es-init`
-
-### - 2. Viewer
-`docker run -d --name arkime-viewer -e ELASTIC_HOST="$HOSTNAME" -e ARKIME_USER="$USERNAME" -e ARKIME_PSWD="$PASSWORD" -p 80:8005 rskntroot/arkime:2.7.1 /opt/arkime/bin/viewer.sh`
-
-### - 3. Import
+### - 2. Import
 Place .pcap files in `/opt/docker/arkime/import/`
 
-`docker run -d --name arkime-import -e ELASTIC_HOST="$HOSTNAME" -v /opt/docker/arkime/import/:/import/ rskntroot/arkime:2.7.1 /opt/arkime/bin/import.sh`
+`docker run -d --name arkime_import --network arkime_default -v /$IMPORT_DIR:/import:rw rskntroot/arkime:2.7.1-1 /opt/arkime/bin/import.sh`
 
-> (default creds - admin:password)
+### Default Login Credentials
+> root
+> arkime-pswd
 
-# Recommendations
-> Use a reverse proxy such as nginx or traefik.
+## FUTURE
+> Finish Capture Role
+> Enable TLS with nginx
+> Swap to Traefik
+> Define persistent store for ElasticSearch
+> Add redundant ElasticSearch node for tolerance
+> Add a Kibana node
+
