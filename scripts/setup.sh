@@ -1,21 +1,26 @@
 #!/bin/bash
 
-# wait for elasticsearch to come online
-while [ "$(curl elasticsearch:9200/_cluster/health?pretty 2> /dev/null | grep status | awk -F '"' '{print $4}')" != "green" ]; do 
-  echo "INFO - Waiting for Elasticsearch to come online."; 
-  sleep 5; 
-done
+err_msg () { printf '\033[0;31m[ ERROR ]\033[0m' && echo -e "\t"$(date)"\t"$BASH_SOURCE"\t"$1; }
+warn_msg () { printf '\033[1;33m[ WARN ]\033[0m' && echo -e "\t"$(date)"\t"$BASH_SOURCE"\t"$1; }
+info_msg () { printf '\033[0;36m[ INFO ]\033[0m' && echo -e "\t"$(date)"\t"$BASH_SOURCE"\t"$1; }
 
-# configure arkime
-/opt/arkime/bin/config.sh
+FLAG='/opt/arkime/flags'
 
-# if switch/init-db exists
-if [ -e "/opt/arkime/switch/init-db" ]; then
+## CONFIGURE ARKIME ##
+#
+if [ -e "$FLAG/config-ark" ]; then
+  info_msg "Arkime configure script now running...";
+  /opt/arkime/bin/config.sh;
+  info_msg "Arkime configure script completed.";
+  rm $FLAG/config-ark;
+fi
+
+## INITIALIZE DATABASE & CREATE ADMIN USER ##
+#
+if [ -e "$FLAG/init-db" ]; then
 
   # initialize es database
-  echo "DEBUG - /opt/arkime/log/first_run contains 1.";
-  echo "INFO - The elasticsearch database will be initialized.";
-
+  info_msg "The elasticsearch database will be initialized.";
   echo INIT | /data/moloch/db/db.pl http://elasticsearch:9200 init;
 
   # set default creds if none specified
@@ -23,16 +28,15 @@ if [ -e "/opt/arkime/switch/init-db" ]; then
   if [ -z $ARKIME_PSWD ]; then ARKIME_PSWD="arkime-pswd"; fi;
 
   # create admin user
-  echo "INFO - Arkime Admins user created: "$ARKIME_USER;
-  echo "INFO - The admin password was set: "$ARKIME_PSWD;
+  info_msg "Arkime admin:\t"$ARKIME_USER"\twas created with password:\t"$ARKIME_PSWD;
 
   $ARKIME_DIR/bin/moloch_add_user.sh $ARKIME_USER "Arkime Admin" $ARKIME_PSWD --admin;
 
   # remove switch/init-db
-  rm /opt/arkime/bin/switch/init-db;
+  rm $FLAG/init-db;
 
 else
-  echo "INFO - The elasticsearch database will NOT be initialized.";
+  warn_msg "The ElasticSearch database will NOT be initialized.";
 fi
 
 #'lost'21jn

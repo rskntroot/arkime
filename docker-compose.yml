@@ -1,7 +1,7 @@
 version: '3'
 
 services:
-  es:
+  elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:7.10.1
     hostname: elasticsearch
     environment:
@@ -17,7 +17,7 @@ services:
       - ARKIME_USER=root
       - ARKIME_PSWD=arkime-pswd
     depends_on:
-      - es
+      - elasticsearch
     volumes:
       - /opt/docker/arkime/log:/opt/arkime/log
     entrypoint: /opt/arkime/bin/viewer.sh 

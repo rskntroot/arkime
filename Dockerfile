@@ -9,8 +9,9 @@ RUN apt-get install -y curl wget ethtool libwww-perl libjson-perl libyaml-dev li
 RUN mkdir /data && cd /data && curl -C - "https://s3.amazonaws.com/files.molo.ch/builds/ubuntu-"$UBUNTU_VERS"/moloch_"$ARKIME_VERS".deb" -o arkime.deb && dpkg -i arkime.deb && rm arkime.deb
 RUN /data/moloch/bin/moloch_update_geo.sh
 
-RUN mkdir -p /opt/arkime/logs /opt/arkime/bin
+RUN mkdir -p /opt/arkime && cd /opt/arkime && mkdir bin log switch
 ADD /scripts /opt/arkime/bin
+ADD /flags /opt/arkime/flags
 RUN cd /opt/arkime/bin && chmod 755 ./*.sh
 
 ENV ARKIME_DIR "/data/moloch"

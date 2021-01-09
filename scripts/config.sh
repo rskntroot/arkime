@@ -1,5 +1,10 @@
 #!/bin/bash
 
+err_msg () { printf '\033[0;31m[ ERROR ]\033[0m' && echo -e "\t"$(date)"\t"$BASH_SOURCE"\t"$1; }
+warn_msg () { printf '\033[1;33m[ WARN ]\033[0m' && echo -e "\t"$(date)"\t"$BASH_SOURCE"\t"$1; }
+info_msg () { printf '\033[0;36m[ INFO ]\033[0m' && echo -e "\t"$(date)"\t"$BASH_SOURCE"\t"$1; }
+
+info_msg "Generating Configuration files...";
 # run the default setup script
 echo -e "\nno\n\nno\nno\nno" | $ARKIME_DIR/bin/Configure;
 
@@ -7,9 +12,11 @@ echo -e "\nno\n\nno\nno\nno" | $ARKIME_DIR/bin/Configure;
 if [ -e $ARKIME_DIR/etc/config.ini ]; then rm -f $ARKIME_DIR/etc/config.ini; fi;
 
 # use default interface if none specified
-if [ -z $CAP_INTERFACE ]; then  CAP_INTERFACE=eth1; fi;
+if [ -z $CAP_INTERFACE ]; then CAP_INTERFACE=eth1; fi
 
-cat <<EOF > $ARKIME_DIR/etc/config.ini
+info_msg "Capture Interface will be set to "$CAP_INTERFACE". Ignored by [ Arkime Viewer ].";
+
+cat <<EOF>> $ARKIME_DIR/etc/config.ini
 [default]
 elasticsearch=http://elasticsearch:9200
 rotateIndex=daily
@@ -78,5 +85,6 @@ x-priority=type:integer
 authorization=type:string
 EOF
 
-fi
+info_msg "Configuration files generated.";
+
 #'lost'21jn
