@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # if switch/first-run exists
-if [ -e "/opt/arkime/bin/first-run.switch" ]; then
+if [ -e "/opt/arkime/switch/first-run" ]; then
   # setup arkime
   /opt/arkime/bin/setup.sh;
   
