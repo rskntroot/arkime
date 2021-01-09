@@ -9,8 +9,8 @@ done
 # configure arkime
 /opt/arkime/bin/config.sh
 
-# if first run initialize db
-if [ "$(cat /opt/arkime/bin/init-db.switch)" == "1" ]; then
+# if switch/init-db exists
+if [ -e "/opt/arkime/switch/init-db" ]; then
 
   # initialize es database
   echo "DEBUG - /opt/arkime/log/first_run contains 1.";
@@ -28,8 +28,8 @@ if [ "$(cat /opt/arkime/bin/init-db.switch)" == "1" ]; then
 
   $ARKIME_DIR/bin/moloch_add_user.sh $ARKIME_USER "Arkime Admin" $ARKIME_PSWD --admin;
 
-  # turn off switch
-  echo '0' > /opt/arkime/bin/init-db.switch;
+  # remove switch/init-db
+  rm /opt/arkime/bin/switch/init-db;
 
 else
   echo "INFO - The elasticsearch database will NOT be initialized.";
