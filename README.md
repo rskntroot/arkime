@@ -5,7 +5,7 @@ Arkime on Docker with container role based on entrypoint script.
 > IN PROGRESS - feel free to leave a comment and ill try to hurry up.
 
 ### Prerequisites
-> docker-compose
+docker-compose
 
 `docker pull elasticsearch:7.10.1`
 
@@ -26,9 +26,13 @@ Arkime on Docker with container role based on entrypoint script.
 > ENTRYPOINT /opt/arkime/bin/viewer.sh`
 
 ### - 2. Import
-Place .pcap files in `/opt/docker/arkime/import/`
+Place .pcap files in $IMPORT_DIR
 
-`docker run -d --name arkime_import --network arkime_default -v /$IMPORT_DIR:/import:rw rskntroot/arkime:2.7.1-1 /opt/arkime/bin/import.sh`
+`docker run -d --name arkime_import --network arkime_default -v $IMPORT_DIR:/import:rw rskntroot/arkime:2.7.1-1 /opt/arkime/bin/import.sh`
+
+After first, importing can be done running this command:
+
+`docker start arkime_import`
 
 ### Default Login Credentials
 > root
