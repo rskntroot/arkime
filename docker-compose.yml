@@ -1,0 +1,38 @@
+version: '3'
+
+services:
+  es:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.10.1
+    hostname: elasticsearch
+    environment:
+      - discovery.type=single-node
+
+  viewer:
+    build:
+      context: .
+    image: rskntroot/arkime:2.7.1-1
+    hostname: viewer
+    environment:
+      - ELASTIC_HOST=elasticsearch
+      - ARKIME_USER=root
+      - ARKIME_PSWD=arkime-pswd
+    depends_on:
+      - es
+    volumes:
+      - /opt/docker/arkime/log:/opt/arkime/log
+    entrypoint: /opt/arkime/bin/viewer.sh 
+
+  nginx:
+    build:
+      context: .
+    image: nginx:mainline-alpine
+    hostname: nginx
+    volumes:
+      - /opt/docker/nginx/etc/conf.d:/etc/nginx/conf.d:ro
+      - /opt/docker/nginx/log:/var/log/nginx:rw
+      - /opt/docker/nginx/ssl:/ssl:ro
+    depends_on:
+      - viewer
+    ports:
+      - 80:80
+      - 443:443

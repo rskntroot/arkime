@@ -1,9 +1,38 @@
 #!/bin/bash
 
-# validate all fields are created
-if [ -z $ELASTIC_HOST ]; then echo "No elasticsearch node was specified in ENV: ELASTIC_HOST";
+# wait for elasticsearch to come online
+while [ "$(curl elasticsearch:9200/_cluster/health?pretty 2> /dev/null | grep status | awk -F '"' '{print $4}')" != "green" ]; do 
+  echo "INFO - Waiting for Elasticsearch to come online."; 
+  sleep 5; 
+done
+
+# configure arkime
+/opt/arkime/bin/config.sh
+
+# if first run initialize db
+if [ "$(cat /opt/arkime/bin/init-db.switch)" == "1" ]; then
+
+  # initialize es database
+  echo "DEBUG - /opt/arkime/log/first_run contains 1.";
+  echo "INFO - The elasticsearch database will be initialized.";
+
+  echo INIT | /data/moloch/db/db.pl http://elasticsearch:9200 init;
+
+  # set default creds if none specified
+  if [ -z $ARKIME_USER ]; then ARKIME_USER="root"; fi;
+  if [ -z $ARKIME_PSWD ]; then ARKIME_PSWD="arkime-pswd"; fi;
+
+  # create admin user
+  echo "INFO - Arkime Admins user created: "$ARKIME_USER;
+  echo "INFO - The admin password was set: "$ARKIME_PSWD;
+
+  $ARKIME_DIR/bin/moloch_add_user.sh $ARKIME_USER "Arkime Admin" $ARKIME_PSWD --admin;
+
+  # turn off switch
+  echo '0' > /opt/arkime/bin/init-db.switch;
+
 else
-        # initialize database
-        echo INIT | $ARKIME_DIR/db/db.pl http://$ELASTIC_HOST:9200 init;
+  echo "INFO - The elasticsearch database will NOT be initialized.";
 fi
+
 #'lost'21jn

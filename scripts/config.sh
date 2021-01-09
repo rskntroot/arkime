@@ -1,23 +1,17 @@
 #!/bin/bash
 
-# elasticsearch must exists
-if [ -z $ELASTIC_HOST ]; then
+# run the default setup script
+echo -e "\nno\n\nno\nno\nno" | $ARKIME_DIR/bin/Configure;
 
-        # let the bois know if it don't
-        echo "No database specified in ENV: ELASTIC_HOST";
-else
-        # run the default setup script
-        echo -e "\nno\n\nno\nno\nno" | $ARKIME_DIR/bin/Configure;
+# remove existing config.ini
+if [ -e $ARKIME_DIR/etc/config.ini ]; then rm -f $ARKIME_DIR/etc/config.ini; fi;
 
-        # remove existing config.ini
-        if [ -e $ARKIME_DIR/etc/config.ini ]; then rm -f $ARKIME_DIR/etc/config.ini; fi;
+# use default interface if none specified
+if [ -z $CAP_INTERFACE ]; then  CAP_INTERFACE=eth1; fi;
 
-        # use default interface if none specified
-        if [ -z $CAP_INTERFACE ]; then  CAP_INTERFACE=eth1; fi;
-
-        cat <<EOF > $ARKIME_DIR/etc/config.ini
+cat <<EOF > $ARKIME_DIR/etc/config.ini
 [default]
-elasticsearch=http://$ELASTIC_HOST:9200
+elasticsearch=http://elasticsearch:9200
 rotateIndex=daily
 passwordSecret = no
 httpRealm = Moloch
@@ -84,11 +78,5 @@ x-priority=type:integer
 authorization=type:string
 EOF
 
-        # set default user if none specified
-        if [ -z $ARKIME_USER ]; then ARKIME_USER="admin"; fi;
-        if [ -z $ARKIME_PSWD ]; then ARKIME_PSWD="password"; fi;
-
-        # add user
-        $ARKIME_DIR/bin/moloch_add_user.sh $ARKIME_USER "Admin User" $ARKIME_PSWD --admin;
 fi
 #'lost'21jn
