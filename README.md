@@ -6,6 +6,7 @@ Arkime on Docker with container role based on entrypoint script.
 
 ### Prerequisites
 > docker-compose
+
 `docker pull elasticsearch:7.10.1`
 
 `docker pull nginx:mainline-alpine`
@@ -17,7 +18,7 @@ Arkime on Docker with container role based on entrypoint script.
 
 `docker-compose up -d`
 
-# Available roles
+## Available roles
 ### - 1. Viewer
 > ARKIME_USER
 > ARKIME_PSWD
