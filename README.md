@@ -2,9 +2,9 @@
 
 Arkime on Docker with container role based on entrypoint script. 
 
-> IN PROGRESS - feel free to leave a comment and ill try to hurry up.
+> IN PROGRESS - Feel free to leave a comment and I'll try to "devops", but faster.
 
-### Run the Project
+## Run the Project
 cd to the project folder then
 ```sh
 $ docker-compose up -d
@@ -18,28 +18,23 @@ Prerequisites:
 ## Available roles
 
 ##### Viewer
-- ARKIME_USER
-- ARKIME_PSWD
-- VOLUME $LOG_DIR:/opt/arkime/log
-- ENTRYPOINT /opt/arkime/bin/viewer.sh`
+| Type | Field | Value |
+| ------ | ------ | ------ |
+| ENV | ARKIME_USER | root | 
+| ENV | ARKIME_PSWD | arkime-pswd |
+| VOLUME | ~/arkime/arkime/log/ | /opt/arkime/log/ |
+| ENTRYPOINT | | /opt/arkime/bin/viewer.sh |
 
 ##### Import
-> Place .pcap files in $IMPORT_DIR
+> Place .pcap files in ~/arkime/arkime/import
 
 ```sh
-$ docker run -d --name arkime_import \
-    -v $IMPORT_DIR:/import:rw \
-    --network arkime_default \
-    rskntroot/arkime:2.7.1-1 /opt/arkime/bin/import.sh
+$ docker start arkime_import_1
 ```
 
 > View logs
 ```sh
-$ docker logs arkime_import -f
-```
-> Future Imports (after first run)
-```sh
-$ docker start arkime_import
+$ docker logs arkime_import_1 -f
 ```
 
 ## Default Login Credentials
@@ -48,11 +43,13 @@ $ docker start arkime_import
 | root |  arkime-pswd |
 
 ## Future Additions
-- Finish Capture Role
-- Enable TLS with nginx
-- Swap to Traefik
-- Define persistent store for ElasticSearch
-- Add redundant ElasticSearch node for tolerance
+- Enabling [ Arkime Capture ]
+- Finalizing config.sh 
+- Swap Nginx with Traefik
+- Enable manually configured TLS
+- Enable autoTLS with letsEncrypt
+- Define persistent storage for ElasticSearch
+- Add redundant ElasticSearch nodes for tolerance
 - Add a Kibana node
 - ...
 - Profit?
