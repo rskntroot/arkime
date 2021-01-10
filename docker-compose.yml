@@ -19,20 +19,17 @@ services:
     depends_on:
       - elasticsearch
     volumes:
-      - /opt/docker/arkime/log:/opt/arkime/log
+      - ./arkime/log:/opt/arkime/log
     entrypoint: /opt/arkime/bin/viewer.sh 
 
   nginx:
-    build:
-      context: .
     image: nginx:mainline-alpine
     hostname: nginx
     volumes:
-      - /opt/docker/nginx/etc/conf.d:/etc/nginx/conf.d:ro
-      - /opt/docker/nginx/log:/var/log/nginx:rw
-      - /opt/docker/nginx/ssl:/ssl:ro
+      - ./nginx/etc/conf.d:/etc/nginx/conf.d:ro
+      - ./nginx/log:/var/log/nginx:rw
+      - ./nginx/ssl:/ssl:ro
     depends_on:
       - viewer
     ports:
       - 80:80
-      - 443:443
