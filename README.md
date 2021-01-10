@@ -5,17 +5,15 @@ Arkime on Docker with container role based on entrypoint script.
 > IN PROGRESS - feel free to leave a comment and ill try to hurry up.
 
 ### Run the Project
-
+cd to the project folder then
 ```sh
 $ docker-compose up -d
 ```
-
-##### Offline Installations
-Prerequisites: ubuntu:20.04 elasticsearch:7.10.1 & nginx:mainline-alpine
-
-```sh
-$ for d in ubuntu:20.04 elasticsearch:7.10.1 nginx:mainline-alpine; do docker pull $d; docker save $d -o $d.tar;  done
-```
+##### Offline Installation
+Prerequisites: 
+- ubuntu:20.04
+- elasticsearch:7.10.1
+- nginx:mainline-alpine
 
 ## Available roles
 
