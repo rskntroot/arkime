@@ -14,6 +14,8 @@ docker-compose
 
 ### Run the Project
 
+`cd ~/arkime`
+
 `docker-compose up -d`
 
 ## Available roles
