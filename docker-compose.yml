@@ -13,7 +13,6 @@ services:
     image: rskntroot/arkime:2.7.1-1
     hostname: viewer
     environment:
-      - ELASTIC_HOST=elasticsearch
       - ARKIME_USER=root
       - ARKIME_PSWD=arkime-pswd
     depends_on:
@@ -21,6 +20,15 @@ services:
     volumes:
       - ./arkime/log:/opt/arkime/log
     entrypoint: /opt/arkime/bin/viewer.sh 
+
+  import:
+    image: rskntroot/arkime:2.7.1-1
+    hostname: import
+    depends_on:
+      - elasticsearch
+    volumes:
+      - ./arkime/import:/import
+    entrypoint: /opt/arkime/bin/import.sh
 
   nginx:
     image: nginx:mainline-alpine
