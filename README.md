@@ -4,7 +4,7 @@ Arkime on Docker with container role based on entrypoint script.
 
 > IN PROGRESS - Feel free to leave a comment and I'll try to "devops", but faster.
 
-### Run the Project
+## Run the Project
 cd to the project folder then
 ```sh
 $ docker-compose up -d
@@ -18,10 +18,12 @@ Prerequisites:
 ## Available roles
 
 ##### Viewer
-- ARKIME_USER
-- ARKIME_PSWD
-- VOLUME $LOG_DIR:/opt/arkime/log
-- ENTRYPOINT /opt/arkime/bin/viewer.sh`
+| Type | Field | Value |
+| ------ | ------ | ------ |
+| ENV | ARKIME_USER | root | 
+| ENV | ARKIME_PSWD | arkime-pswd |
+| VOLUME | ~/arkime/arkime/log/ | /opt/arkime/log/ |
+| ENTRYPOINT | | /opt/arkime/bin/viewer.sh |
 
 ##### Import
 > Place .pcap files in ~/arkime/arkime/import
