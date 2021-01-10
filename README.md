@@ -14,10 +14,6 @@ docker-compose
 
 ### Run the Project
 
-`cd ~/arkime`
-
-`docker build -t rskntroot/arkime:2.7.1-1 .`
-
 `docker-compose up -d`
 
 ## Available roles
