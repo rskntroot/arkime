@@ -4,7 +4,7 @@ err_msg () { printf '\033[0;31m[ ERROR ]\033[0m' && echo -e "\t"$(date)"\t"$BASH
 warn_msg () { printf '\033[1;33m[ WARN ]\033[0m' && echo -e "\t"$(date)"\t"$BASH_SOURCE"\t"$1; }
 info_msg () { printf '\033[0;36m[ INFO ]\033[0m' && echo -e "\t"$(date)"\t"$BASH_SOURCE"\t"$1; }
 
-FLAG="/opt/arkime/flags"
+FLAG="/arkime/flags"
 
 info_msg "[ Arkime Import ] has been started."
 info_msg "All .pcap files from %root%/arkime/import will be moved to the datastore then read into Arkime."
@@ -20,7 +20,7 @@ done
 #
 if [ -e "$FLAG/conf_import" ]; then
 
-  /opt/arkime/bin/config.sh;
+  /arkime/bin/config.sh;
 
   ## WAIT FOR INIT-DB ##
   #
@@ -31,25 +31,25 @@ if [ -e "$FLAG/conf_import" ]; then
 
   ## CREATE USER ## 
   #
-  /opt/arkime/bin/add-user.sh;
+  /arkime/bin/add-user.sh;
 
   rm $FLAG/conf_import;
 fi
 
 ## CREATE PCAP DATASTORE ##
 #
-if [ ! -e "/opt/arkime/data" ]; then 
-  info_msg "Creating datastore at /opt/arkime/data."
-  mkdir -p /opt/arkime/data; 
+if [ ! -e "/arkime/data" ]; then 
+  info_msg "Creating datastore at /arkime/data."
+  mkdir -p /arkime/data; 
 else
-  info_msg "Datastore found at /opt/arkime/data."
-  ls -lh /opt/arkime/data;
+  info_msg "Datastore found at /arkime/data."
+  ls -lh /arkime/data;
 fi
 
 ## ENABLE PCAP DOWNLOAD FROM VIEWER ##
 #
 info_msg "Enabling access to imported .pcap files for [ Arkime Viewer ] over port 8005."
-cd $ARKIME_DIR/viewer && ../bin/node ./viewer.js -c ../etc/config.ini | tee -a /opt/arkime/log/import.log 2>&1 &
+cd $ARKIME_DIR/viewer && ../bin/node ./viewer.js -c ../etc/config.ini | tee -a /arkime/log/import.log 2>&1 &
 
 ## RUN IMPORT INDEFINITELY EVERY 60 SECONDS ##
 #
@@ -72,10 +72,10 @@ while :; do
     for PCAP_FILE in $(ls /import | grep '\.pcap'); do
       
       info_msg "Moving "$PCAP_FILE" to datastore.";
-      mv /import/$PCAP_FILE /opt/arkime/data/$PCAP_FILE;
+      mv /import/$PCAP_FILE /arkime/data/$PCAP_FILE;
   	
       info_msg "Importing: "$PCAP_FILE;
-      $ARKIME_DIR/bin/moloch-capture -r /opt/arkime/data/$PCAP_FILE | tee -a /opt/arkime/log/import.log 2>&1;
+      $ARKIME_DIR/bin/moloch-capture -r /arkime/data/$PCAP_FILE | tee -a /arkime/log/import.log 2>&1;
   
     done;
     info_msg "Import complete."
