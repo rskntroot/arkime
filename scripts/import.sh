@@ -53,7 +53,7 @@ fi
 ## ENABLE PCAP DOWNLOAD FROM VIEWER ##
 #
 info_msg "Enabling access to imported .pcap files for [ Arkime Viewer ] over port 8005."
-cd $ARKIME_DIR/viewer && ../bin/node ./viewer.js -c ../etc/config.ini | tee -a /arkime/log/import.log > /dev/null &
+cd $ARKIME_DIR/viewer && ../bin/node ./viewer.js -c ../etc/config.ini | tee -a /arkime/log/$(hostname).log > /dev/null &
 
 ## RUN IMPORT INDEFINITELY EVERY 60 SECONDS ##
 #
@@ -79,7 +79,7 @@ while :; do
       mv /import/$PCAP_FILE /arkime/data/$PCAP_FILE;
   	
       info_msg "Importing: "$PCAP_FILE;
-      $ARKIME_DIR/bin/moloch-capture -r /arkime/data/$PCAP_FILE | tee -a /arkime/log/import.log 2>&1;
+      $ARKIME_DIR/bin/moloch-capture -r /arkime/data/$PCAP_FILE | tee -a /arkime/log/$(hostname).log > /dev/null;
   
     done;
     info_msg "Import complete."

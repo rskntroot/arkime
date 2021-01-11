@@ -13,8 +13,8 @@ if [ -z $ARKIME_PSWD ]; then ARKIME_PSWD="arkime-pswd"; fi;
 
 ## CREATE ADMIN USER ##
 #
-$ARKIME_DIR/bin/moloch_add_user.sh $ARKIME_USER "Arkime Admin" $ARKIME_PSWD --admin | tee -a $(hostname).log > /dev/null;
+$ARKIME_DIR/bin/moloch_add_user.sh $ARKIME_USER "Arkime Admin" $ARKIME_PSWD --admin | tee -a /arkime/log/$(hostname).log > /dev/null;
 
-info_msg "Admin User was created:\t"$ARKiME_USER;
+info_msg "Admin User was created:\t"$ARKIME_USER;
 
 #'lost'21jn

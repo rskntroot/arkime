@@ -41,7 +41,7 @@ fi
 #
 info_msg "Starting [ Arkime Viewer ] webserver on port 8005..."
 
-cd $ARKIME_DIR/viewer && ../bin/node ./viewer.js -c ../etc/config.ini | tee -a /arkime/log/viewer.log 2>&1
+cd $ARKIME_DIR/viewer && ../bin/node ./viewer.js -c ../etc/config.ini | tee -a /arkime/log/$(hostname).log 2>&1
 
 err_msg "Powering down [ Arkime Viewer ]..."
 #'lost'21jn
