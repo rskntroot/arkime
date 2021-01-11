@@ -45,6 +45,7 @@ $ docker logs -f arkime_viewer_1
 $ docker logs -f arkime_import_1
 $ docker logs -f arkime_elasticsearch_1
 ```
+
 ## Default Login Credentials
 | Username | Password | 
 | ------ | ------ |
