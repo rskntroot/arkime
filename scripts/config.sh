@@ -4,7 +4,8 @@ err_msg () { printf '\033[0;31m[ ERROR ]\033[0m' && echo -e "\t"$(date)"\t"$BASH
 warn_msg () { printf '\033[1;33m[ WARN ]\033[0m' && echo -e "\t"$(date)"\t"$BASH_SOURCE"\t"$1; }
 info_msg () { printf '\033[0;36m[ INFO ]\033[0m' && echo -e "\t"$(date)"\t"$BASH_SOURCE"\t"$1; }
 
-info_msg "Generating Configuration files...";
+info_msg "Configuring Arkime...";
+
 # run the default setup script
 echo -e "\nno\n\nno\nno\nno" | $ARKIME_DIR/bin/Configure;
 
@@ -85,6 +86,6 @@ x-priority=type:integer
 authorization=type:string
 EOF
 
-info_msg "Configuration files generated.";
+info_msg "Arkime Configured..";
 
 #'lost'21jn

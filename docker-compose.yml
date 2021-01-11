@@ -18,7 +18,7 @@ services:
     depends_on:
       - elasticsearch
     volumes:
-      - ./arkime/log:/opt/arkime/log
+      - ./log:/opt/arkime/log
     entrypoint: /opt/arkime/bin/viewer.sh 
 
   import:
@@ -26,17 +26,22 @@ services:
     hostname: import
     depends_on:
       - elasticsearch
+      - viewer
+    environment:
+      - ARKIME_USER=root
+      - ARKIME_PSWD=arkime-pswd
     volumes:
-      - ./arkime/import:/import
+      - ./log:/opt/arkime/log
+      - ./import:/import
     entrypoint: /opt/arkime/bin/import.sh
 
   nginx:
     image: nginx:mainline-alpine
     hostname: nginx
     volumes:
-      - ./nginx/etc/conf.d:/etc/nginx/conf.d:ro
-      - ./nginx/log:/var/log/nginx:rw
-      - ./nginx/ssl:/ssl:ro
+      - ./etc:/etc/nginx/conf.d:ro
+      - ./ssl:/ssl:ro
+      - ./log:/var/log/nginx:rw
     depends_on:
       - viewer
     ports:

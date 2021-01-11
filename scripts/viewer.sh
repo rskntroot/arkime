@@ -15,26 +15,24 @@ while [ "$(curl elasticsearch:9200/_cluster/health?pretty 2> /dev/null | grep st
   sleep 5; 
 done
 
-## CONFIGURE ARKIME - IF FLAG SET ##
+## CONFIGURE ARKIME ##
 #
 if [ -e "$FLAG/conf_viewer" ]; then
-
-  info_msg "Configuring [ Arkime Viewer ]...";
   /opt/arkime/bin/config.sh;
-
-  info_msg "[ Arkime Viewer ] configured.";
-  rm $FLAG/conf_viewer;
 fi
 
-## INITIALIZE DATABASE AND CREATE ADMIN USER - IF FLAG SET ##
+## INITIALIZE DATABASE AND CREATE ADMIN USER ##
 #
 if [ -e "$FLAG/init_db" ]; then
-
-  info_msg "Initializing [ ElasticSearch ] database and creating admin user...";
   /opt/arkime/bin/init-db.sh;
-  
   rm $FLAG/init_db;
-  info_msg "[ ElasticSearch ] database initialized admin user created.";
+fi
+
+## CREATE USER ##
+#
+if [ -e "$FLAG/conf_viewer" ]; then
+  /opt/arkime/bin/add-user.sh;
+  rm $FLAG/conf_viewer;
 fi
 
 ## START [ ARKIME VIEWER ] WITH LOGGING ##
