@@ -22,11 +22,19 @@ Prerequisites:
 | ------ | ------ | ------ |
 | ENV | ARKIME_USER | root | 
 | ENV | ARKIME_PSWD | arkime-pswd |
-| VOLUME | ~/arkime/arkime/log/ | /opt/arkime/log/ |
+| VOLUME | ~/arkime/log/ | /opt/arkime/log/ |
 | ENTRYPOINT | | /opt/arkime/bin/viewer.sh |
 
 ##### Import
-> Place .pcap files in ~/arkime/arkime/import
+| Type | Field | Value |
+| ------ | ------ | ------ |
+| ENV | ARKIME_USER | root |
+| ENV | ARKIME_PSWD | arkime-pswd |
+| VOLUME | ~/arkime/log/ | /opt/arkime/log/ |
+| VOLUME | ~/arkime/import | /import |
+| ENTRYPOINT | | /opt/arkime/bin/import.sh |
+
+> Place .pcap files in ~/arkime/import
 
 ```sh
 $ docker start arkime_import_1
