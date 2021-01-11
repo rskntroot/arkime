@@ -15,6 +15,8 @@ while [ "$(curl elasticsearch:9200/_cluster/health?pretty 2> /dev/null | grep st
   sleep 5; 
 done
 
+info_msg "ElasticSearch is online.";
+
 ## CONFIGURE ARKIME ##
 #
 if [ -e "$FLAG/conf_viewer" ]; then
@@ -37,9 +39,9 @@ fi
 
 ## START [ ARKIME VIEWER ] WITH LOGGING ##
 #
-info_msg "[ Arkime Viewer ] is starting..."
+info_msg "Starting [ Arkime Viewer ] webserver on port 8005..."
 
-cd $ARKIME_DIR/viewer && ../bin/node ./viewer.js -c ../etc/config.ini | tee -a /arkime/log/viewer.log 2>&1
+cd $ARKIME_DIR/viewer && ../bin/node ./viewer.js -c ../etc/config.ini | tee -a /arkime/log/$(hostname).log 2>&1
 
-warn_msg "[ Arkime Viewer ] was stopped."
+err_msg "Powering down [ Arkime Viewer ]..."
 #'lost'21jn

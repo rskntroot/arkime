@@ -86,6 +86,6 @@ x-priority=type:integer
 authorization=type:string
 EOF
 
-info_msg "Arkime Configured..";
+info_msg "Arkime Configured.";
 
 #'lost'21jn
