@@ -34,16 +34,12 @@ Prerequisites:
 | VOLUME | ~/arkime/import | /import |
 | ENTRYPOINT | | /opt/arkime/bin/import.sh |
 
-> Place .pcap files in ~/arkime/import
-
-```sh
-$ docker start arkime_import_1
-```
-
 > View logs
 ```sh
 $ docker logs arkime_import_1 -f
 ```
+
+> Usage: place .pcap files in ~/arkime/import - they are read in automatically.
 
 ## Default Login Credentials
 | Username | Password | 
