@@ -45,34 +45,26 @@ fi
 info_msg "Enabling access to imported .pcap files for [ Arkime Viewer ] over port 8005."
 cd $ARKIME_DIR/viewer && ../bin/node ./viewer.js -c ../etc/config.ini | tee -a /arkime/log/$(hostname).log > /dev/null &
 
-## RUN IMPORT INDEFINITELY EVERY 60 SECONDS ##
+## RUN IMPORT CHECK EVERY 60 SECONDS ##
 #
 while :; do
 
   ## CHECK FOR PCAP FILES ##
   #
-  if [ -z $(ls /import/*.pcap 2> /dev/null) ]; then
-    warn_msg "No .pcap files were found in the import directory."
-  else
+  if [ ! -z $(ls /import/*.pcap 2> /dev/null) ]; then
   
-    ## LIST FILES IN IMPORT DIRECTORY ##
-    #
-    info_msg "The following files exist in the import directory:"
-    ls -alh /import
-  
-    ## EAT PCAP FOR BREAKFAST
+    ## EAT PCAP FOR BREAKFAST ##
     #
     info_msg "Importing .pcap files..."
     for PCAP_FILE in $(ls /import | grep '\.pcap'); do
       
-      info_msg "Moving "$PCAP_FILE" to datastore.";
-      mv /import/$PCAP_FILE /arkime/data/$PCAP_FILE;
-  	
       info_msg "Importing: "$PCAP_FILE;
+      mv /import/$PCAP_FILE /arkime/data/$PCAP_FILE;
+      chmod +r /arkime/data/$PCAPFILE;
       $ARKIME_DIR/bin/moloch-capture -r /arkime/data/$PCAP_FILE | tee -a /arkime/log/$(hostname).log > /dev/null;
   
     done;
-    info_msg "Import complete."
+    info_msg "Import complete. Now waiting for more .pcap files...";
   fi;
 
   sleep 60;
