@@ -1,4 +1,9 @@
 version: '3'
+networks:
+  internal:
+    driver: bridge 
+  external:
+    driver: bridge
 
 services:
   elasticsearch:
@@ -6,10 +11,10 @@ services:
     hostname: elasticsearch
     environment:
       - discovery.type=single-node
+    networks: 
+      - internal
 
   viewer:
-    build:
-      context: .
     image: rskntroot/arkime:2.7.1-1
     hostname: viewer
     environment:
@@ -19,6 +24,8 @@ services:
       - elasticsearch
     volumes:
       - ./log:/arkime/log
+    networks:
+      - internal
     entrypoint: /arkime/bin/viewer.sh
 
   import:
@@ -33,16 +40,21 @@ services:
     volumes:
       - ./log:/arkime/log
       - ./import:/import
+    networks:
+      - internal
     entrypoint: /arkime/bin/import.sh
 
   nginx:
     image: nginx:mainline-alpine
     hostname: nginx
     volumes:
-      - ./etc:/etc/nginx/conf.d:ro
+      - ./conf.d:/etc/nginx/conf.d:ro
       - ./ssl:/ssl:ro
       - ./log:/var/log/nginx:rw
     depends_on:
       - viewer
+    networks: 
+      - internal
+      - external
     ports:
       - 80:80
