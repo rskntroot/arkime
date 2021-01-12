@@ -10,8 +10,7 @@ RUN /data/moloch/bin/moloch_update_geo.sh
 
 RUN mkdir /arkime && cd /arkime && mkdir bin log switch
 ADD /scripts /arkime/bin
-ADD /flags /arkime/flags
-RUN cd /arkime/bin && chmod 755 ./*.sh
+RUN chmod 755 /arkime/bin/*.sh
 
 ENV ARKIME_DIR "/data/moloch"
 EXPOSE 8005/tcp

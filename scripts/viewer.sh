@@ -4,7 +4,7 @@ err_msg () { printf '\033[0;31m[ ERROR ]\033[0m' && echo -e "\t"$(date)"\t"$BASH
 warn_msg () { printf '\033[1;33m[ WARN ]\033[0m' && echo -e "\t"$(date)"\t"$BASH_SOURCE"\t"$1; }
 info_msg () { printf '\033[0;36m[ INFO ]\033[0m' && echo -e "\t"$(date)"\t"$BASH_SOURCE"\t"$1; }
 
-FLAG="/arkime/flags"
+FLAG="/arkime/bin/flags"
 
 info_msg "[ Arkime Viewer ] has been started."
 
@@ -19,7 +19,7 @@ info_msg "ElasticSearch is online.";
 
 ## CONFIGURE ARKIME ##
 #
-if [ -e "$FLAG/conf_viewer" ]; then
+if [ -e "$FLAG/conf_arkime" ]; then
   /arkime/bin/config.sh;
 fi
 
@@ -34,7 +34,7 @@ fi
 #
 if [ -e "$FLAG/conf_viewer" ]; then
   /arkime/bin/add-user.sh;
-  rm $FLAG/conf_viewer;
+  rm $FLAG/conf_arkime;
 fi
 
 ## START [ ARKIME VIEWER ] WITH LOGGING ##

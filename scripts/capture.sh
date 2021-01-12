@@ -4,7 +4,7 @@ err_msg () { printf '\033[0;31m[ ERROR ]\033[0m' && echo -e "\t"$(date)"\t"$BASH
 warn_msg () { printf '\033[1;33m[ WARN ]\033[0m' && echo -e "\t"$(date)"\t"$BASH_SOURCE"\t"$1; }
 info_msg () { printf '\033[0;36m[ INFO ]\033[0m' && echo -e "\t"$(date)"\t"$BASH_SOURCE"\t"$1; }
 
-FLAG="/arkime/flags"
+FLAG="/arkime/bin/flags"
 
 info_msg "[ Arkime Capture ] has been started."
 info_msg "TODO - Explain running on specified interface..."
@@ -20,7 +20,7 @@ info_msg "ElasticSearch is online."
 
 ## CONFIGURE ARKIME & CREATE USER ##
 #
-if [ -e "$FLAG/conf_import" ]; then
+if [ -e "$FLAG/conf_arkime" ]; then
 
   /arkime/bin/config.sh;
 
@@ -37,17 +37,7 @@ if [ -e "$FLAG/conf_import" ]; then
   #
   /arkime/bin/add-user.sh;
 
-  rm $FLAG/conf_import;
-fi
-
-## CREATE PCAP DATASTORE ##
-#
-if [ ! -e "/arkime/data" ]; then 
-  info_msg "Creating datastore at /arkime/data."
-  mkdir -p /arkime/data; 
-else
-  info_msg "Datastore found at /arkime/data."
-  ls -lh /arkime/data;
+  rm $FLAG/conf_arkime;
 fi
 
 ## ENABLE PCAP DOWNLOAD FROM VIEWER ##

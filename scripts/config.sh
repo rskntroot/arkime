@@ -4,88 +4,61 @@ err_msg () { printf '\033[0;31m[ ERROR ]\033[0m' && echo -e "\t"$(date)"\t"$BASH
 warn_msg () { printf '\033[1;33m[ WARN ]\033[0m' && echo -e "\t"$(date)"\t"$BASH_SOURCE"\t"$1; }
 info_msg () { printf '\033[0;36m[ INFO ]\033[0m' && echo -e "\t"$(date)"\t"$BASH_SOURCE"\t"$1; }
 
-info_msg "Configuring Arkime...";
+## SET DEFAULT VALUES ##
+#
+if [ -z "$CAP_INTERFACE" ]; then CAP_INTERFACE='eth1'; fi
+if [ -z "$ARKIME_S2S" ]; then ARKIME_S2S=$(echo deeznuts | sha256sum | cut -d' ' -f1); fi
+if [ -z "$ES_HOST" ]; then ES_HOST='http://elasticsearch:9200'; fi
 
-# run the default setup script
-echo -e "\nno\n\nno\nno\nno" | $ARKIME_DIR/bin/Configure;
+info_msg "Generating [ Arkime $(hostname) ] configuration file..."
+mkdir /arkime/etc
+sed -r -e "s,\w+_INSTALL_DIR,$ARKIME_DIR,g" -e "s,\w+_PASSWORD,$ARKIME_S2S," -e "s,\w+_INTERFACE,$CAP_INTERFACE," -e "s,\w+_ELASTICSEARCH,$ES_HOST," < $ARKIME_DIR/etc/config.ini.sample > /arkime/etc/config.ini
+ln -s /arkime/etc/config.ini $ARKIME_DIR/etc/config.ini
+info_msg "Configuration file generated."
 
-# remove existing config.ini
-if [ -e $ARKIME_DIR/etc/config.ini ]; then rm -f $ARKIME_DIR/etc/config.ini; fi;
+info_msg "Setting log rotation for 7 days."
 
-# use default interface if none specified
-if [ -z $CAP_INTERFACE ]; then CAP_INTERFACE=eth1; fi
-
-info_msg "Capture Interface will be set to "$CAP_INTERFACE". Ignored by [ Arkime Viewer ].";
-
-cat <<EOF>> $ARKIME_DIR/etc/config.ini
-[default]
-elasticsearch=http://elasticsearch:9200
-rotateIndex=daily
-passwordSecret = no
-httpRealm = Moloch
-interface=$CAP_INTERFACE
-pcapDir = /data/moloch/raw
-maxFileSizeG = 12
-tcpTimeout = 600
-tcpSaveTimeout = 720
-udpTimeout = 30
-icmpTimeout = 10
-maxStreams = 1000000
-maxPackets = 10000
-freeSpaceG = 5%
-viewPort = 8005
-geoLite2Country = /usr/share/GeoIP/GeoLite2-Country.mmdb;/data/moloch/etc/GeoLite2-Country.mmdb
-geoLite2ASN = /usr/share/GeoIP/GeoLite2-ASN.mmdb;/data/moloch/etc/GeoLite2-ASN.mmdb
-rirFile = /data/moloch/etc/ipv4-address-space.csv
-ouiFile = /data/moloch/etc/oui.txt
-dropUser=nobody
-dropGroup=daemon
-parseSMTP=true
-parseSMB=true
-parseQSValue=false
-supportSha256=false
-maxReqBody=64
-config.reqBodyOnlyUtf8 = true
-smtpIpHeaders=X-Originating-IP:;X-Barracuda-Apparent-Source-IP:
-parsersDir=/data/moloch/parsers
-pluginsDir=/data/moloch/plugins
-spiDataMaxIndices=4
-packetThreads=2
-pcapWriteMethod=simple
-pcapWriteSize = 262143
-dbBulkSize = 300000
-compressES = false
-maxESConns = 30
-maxESRequests = 500
-packetsPerPoll = 50000
-antiSynDrop = true
-logEveryXPackets = 100000
-logUnknownProtocols = false
-logESRequests = true
-logFileCreation = true
-[class1]
-freeSpaceG = 10%
-[node1]
-nodeClass = class1
-elasticsearch=elasticsearchhost1
-[node2]
-nodeClass = class2
-elasticsearch=elasticsearchhost2
-interface = eth4
-[headers-http-request]
-referer=type:string;count:true;unique:true
-authorization=type:string;count:true
-content-type=type:string;count:true
-origin=type:string
-[headers-http-response]
-location=type:string
-server=type:string
-content-type=type:string;count:true
-[headers-email]
-x-priority=type:integer
-authorization=type:string
+## SETUP LOGROTATE ##
+#
+cat << EOF > /etc/logrotate.d/$(hostname)
+$ARKIME_DIR/logs/$(hostname).log {
+    daily
+    rotate 7
+    compressl
+    notifempty
+    copytruncate
+}
 EOF
 
-info_msg "Arkime Configured.";
+## CREATE PCAP DATASTORE ##
+#
+info_msg "Creating datastore at /arkime/data."
+mkdir -p /arkime/data;
+ln -s /arkime/data $ARKIME_DIR/raw
+
+## DEFINE INTERFACE CONFIG SCRIPT ##
+#
+info_msg "Generating capture prerequesties for:\t"$CAP_INTERFACE
+cat << EOF > $ARKIME_DIR/bin/moloch_config_interfaces.sh
+#!/bin/sh
+/sbin/ethtool -G \$CAP_INTERFACE rx 4096 tx 4096 || true
+for i in rx tx sg tso ufo gso gro lro; do
+    /sbin/ethtool -K \$CAP_INTERFACE \$i off || true
+done
+EOF
+
+chmod a+x $ARKIME_DIR/bin/moloch_config_interfaces.sh
+
+## UNLOCK CORE AND MEMLOCK ##
+#
+info_msg "Removing core and memlock limits."
+cat << EOF > /etc/security/limits.d/99-moloch.conf
+nobody  -       core    unlimited
+root    -       core    unlimited
+nobody  -       memlock    unlimited
+root    -       memlock    unlimited
+EOF
+
+info_msg "Configuration has completed."
 
 #'lost'21jn
