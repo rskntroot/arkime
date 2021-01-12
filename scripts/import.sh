@@ -7,7 +7,6 @@ info_msg () { printf '\033[0;36m[ INFO ]\033[0m' && echo -e "\t"$(date)"\t"$BASH
 FLAG="/arkime/bin/flags"
 
 info_msg "[ Arkime Import ] has been started."
-info_msg "All .pcap files placed in %root%/arkime/import will be moved to the datastore then read into Arkime."
 
 ## WAIT FOR ELASTICSEARCH TO COME ONLINE ##
 #
@@ -45,6 +44,8 @@ fi
 info_msg "Enabling access to imported .pcap files for [ Arkime Viewer ] over port 8005."
 cd $ARKIME_DIR/viewer && ../bin/node ./viewer.js -c ../etc/config.ini | tee -a /arkime/log/$(hostname).log > /dev/null &
 
+info_msg "[ Arkime Import ] is now watching %root%/import/ for .pcap files."
+
 ## RUN IMPORT CHECK EVERY 60 SECONDS ##
 #
 while :; do
@@ -55,7 +56,6 @@ while :; do
   
     ## EAT PCAP FOR BREAKFAST ##
     #
-    info_msg "Importing .pcap files..."
     for PCAP_FILE in $(ls /import | grep '\.pcap'); do
       
       info_msg "Importing: "$PCAP_FILE;
