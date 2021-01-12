@@ -51,14 +51,21 @@ $ docker logs -f arkime_elasticsearch_1
 | ------ | ------ |
 | root |  arkime-pswd |
 
+## HTTPS
+> Add [ cert & key ] into ~/arkime/ssl and updated [ .conf file ] into ~/arkime/conf.d
+```sh
+$ docker restart arkime_nginx_1
+```
+
 ## Future Additions
-- Enabling [ Arkime Capture ]
-- Finalizing config.sh 
+- Enable [ Arkime Capture ]
 - Swap Nginx with Traefik
-- Enable manually configured TLS
+- Enable peristent storage for ELASTICSEARCH (ES)
+- Add tolerance with multi-node ES
+- Tie in a Kibana node
+- Push docker node stats into ElasticSearch
+- Port project to Kubernetes
 - Enable autoTLS with letsEncrypt
-- Define persistent storage for ElasticSearch
-- Add redundant ElasticSearch nodes for tolerance
-- Add a Kibana node
 - ...
+- Possibly messing with netsniff-ng or pcap++ to push pcap to any capture node from any host.
 - Profit?
