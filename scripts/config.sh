@@ -10,16 +10,16 @@ if [ -z "$CAP_INTERFACE" ]; then CAP_INTERFACE='eth1'; fi
 if [ -z "$ARKIME_S2S" ]; then ARKIME_S2S=$(echo deeznuts | sha256sum | cut -d' ' -f1); fi
 if [ -z "$ES_HOST" ]; then ES_HOST='http://elasticsearch:9200'; fi
 
+## GENERATE CONFIG.INI FROM SAMPLE ##
+#
 info_msg "Generating [ Arkime $(hostname) ] configuration file..."
-mkdir /arkime/etc
 sed -r -e "s,\w+_INSTALL_DIR,$ARKIME_DIR,g" -e "s,\w+_PASSWORD,$ARKIME_S2S," -e "s,\w+_INTERFACE,$CAP_INTERFACE," -e "s,\w+_ELASTICSEARCH,$ES_HOST," < $ARKIME_DIR/etc/config.ini.sample > /arkime/etc/config.ini
 ln -s /arkime/etc/config.ini $ARKIME_DIR/etc/config.ini
 info_msg "Configuration file generated."
 
-info_msg "Setting log rotation for 7 days."
-
 ## SETUP LOGROTATE ##
 #
+info_msg "Setting weekly log rotation."
 cat << EOF > /etc/logrotate.d/$(hostname)
 $ARKIME_DIR/logs/$(hostname).log {
     daily
@@ -30,10 +30,9 @@ $ARKIME_DIR/logs/$(hostname).log {
 }
 EOF
 
-## CREATE PCAP DATASTORE ##
+## LINK PCAP DATASTORE ##
 #
-info_msg "Creating datastore at /arkime/data."
-mkdir -p /arkime/data;
+info_msg "Linking datastore at /arkime/data."
 ln -s /arkime/data $ARKIME_DIR/raw
 
 ## DEFINE INTERFACE CONFIG SCRIPT ##
