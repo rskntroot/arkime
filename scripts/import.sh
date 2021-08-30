@@ -52,7 +52,9 @@ while :; do
 
   ## CHECK FOR PCAP FILES ##
   #
-  if [ ! -z $(ls /import/*.pcap 2> /dev/null) ]; then
+  if [ -z $(ls /import/*.pcap 2> /dev/null) ]; then
+    warn_msg "No PCAP files found in import directory...";
+  else
   
     ## EAT PCAP FOR BREAKFAST ##
     #
