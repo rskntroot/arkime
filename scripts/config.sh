@@ -33,7 +33,8 @@ EOF
 ## CREATE PCAP DATASTORE ##
 #
 info_msg "Creating datastore at /arkime/data."
-mkdir -p /arkime/data;
+mkdir -p /arkime/data
+chmod 755 /arkime/data
 ln -s /arkime/data $ARKIME_DIR/raw
 
 ## DEFINE INTERFACE CONFIG SCRIPT ##
