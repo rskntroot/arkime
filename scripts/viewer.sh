@@ -32,7 +32,7 @@ fi
 
 ## CREATE USER ##
 #
-if [ -e "$FLAG/conf_viewer" ]; then
+if [ -e "$FLAG/conf_arkime" ]; then
   /arkime/bin/add-user.sh;
   rm $FLAG/conf_arkime;
 fi
