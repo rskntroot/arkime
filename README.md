@@ -1,4 +1,4 @@
-# Docker Arkime v2.7.1-1
+# Docker Arkime v3.0.0-1
 
 Arkime on Docker with container role based on entrypoint script. 
 
@@ -13,7 +13,7 @@ $ docker-compose up -d
 
 ##### Prerequisites: 
 - ubuntu:20.04
-- elasticsearch:7.10.1
+- elasticsearch:7.13.3
 - nginx:mainline-alpine
 
 ## Access
