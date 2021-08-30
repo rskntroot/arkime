@@ -7,7 +7,7 @@ networks:
 
 services:
   elasticsearch:
-    image: docker.elastic.co/elasticsearch/elasticsearch:7.10.1
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.13.3
     hostname: elasticsearch
     environment:
       - discovery.type=single-node
@@ -15,7 +15,7 @@ services:
       - internal
 
   viewer:
-    image: rskntroot/arkime:2.7.1-1
+    image: rskntroot/arkime:3.0.0-1
     hostname: viewer
     environment:
       - ARKIME_USER=root
@@ -29,7 +29,7 @@ services:
     entrypoint: /arkime/bin/viewer.sh
 
   import:
-    image: rskntroot/arkime:2.7.1-1
+    image: rskntroot/arkime:3.0.0-1
     hostname: import
     depends_on:
       - elasticsearch
