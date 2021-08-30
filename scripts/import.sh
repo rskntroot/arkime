@@ -60,7 +60,7 @@ while :; do
       
       info_msg "Importing: "$PCAP_FILE;
       mv /import/$PCAP_FILE /arkime/data/$PCAP_FILE;
-      chmod +r /arkime/data/$PCAPFILE;
+      chmod 644 /arkime/data/$PCAPFILE;
       $ARKIME_DIR/bin/moloch-capture -r /arkime/data/$PCAP_FILE | tee -a /arkime/log/$(hostname).log > /dev/null;
   
     done;
