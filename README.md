@@ -55,7 +55,7 @@ $ docker logs -f arkime_elasticsearch_1
 > Add [ cert & key ] into ~/arkime/ssl and updated [ .conf file ] into ~/arkime/conf.d
 
 ```sh
-$ echo '      - 443:443' > ~/arkime/docker-compose.yml
+$ echo '      - 443:443' >> ~/arkime/docker-compose.yml
 $ docker-compose up -d
 ```
 
