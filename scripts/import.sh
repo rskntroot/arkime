@@ -52,25 +52,23 @@ while :; do
 
   ## CHECK FOR PCAP FILES ##
   #
-  if [ -z $(ls /import/*.pcap 2> /dev/null) ]; then
-    warn_msg "No PCAP files found in import directory...";
-  else
-  
-    ## EAT PCAP FOR BREAKFAST ##
-    #
-    for PCAP_FILE in $(ls /import | grep '\.pcap'); do
-      
-      info_msg "Importing: "$PCAP_FILE;
-      mv /import/$PCAP_FILE /arkime/data/$PCAP_FILE;
-      chmod 644 /arkime/data/$PCAPFILE;
-      $ARKIME_DIR/bin/moloch-capture -r /arkime/data/$PCAP_FILE | tee -a /arkime/log/$(hostname).log > /dev/null;
-  
-    done;
-    info_msg "Import complete. Now waiting for more .pcap files...";
-  fi;
+  IMPORT_FILES=$(ls /import/ | grep -e '\.pcap$');
+  for PCAP in $IMPORT_FILES; do
+    if [ -n $PCAP ]; then
 
+      ## EAT PCAP FOR BREAKFAST ##
+      #
+      info_msg "Importing: "$PCAP;
+      mv /import/$PCAP /arkime/data/$PCAP;
+      $ARKIME_DIR/bin/moloch-capture -r /arkime/data/$PCAP | tee -a /arkime/log/$(hostname).log > /dev/null;
+      info_msg "Import complete. Now waiting for more .pcap files...";
+
+    fi;
+  done;
+
+  chmod 755 /arkime/data;
+  chmod 644 /arkime/data/*.pcap 2> /dev/null;
   sleep 60;
-
 done
 
 err_msg "Powering down [ Arkime Import ]..."
