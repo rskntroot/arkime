@@ -32,9 +32,15 @@ if [ -e "$FLAG/conf_arkime" ]; then
 
   info_msg "[ Arkime Viewer ] is online.";
 
-  ## CREATE USER ## 
+  ## OFFLOAD AUTHENTICATION IF NECESSARY
   #
-  $LOCAL_DIR/bin/addusr.sh;
+  if [ -z $OFFLOAD_AUTH ]; then
+    sed -i 's/passwordSecret/#passwordSecret/' $LOCAL_DIR/etc/config.ini;
+  else
+    ## CREATE USER ## 
+    #
+    $LOCAL_DIR/bin/addusr.sh;
+  fi 
 
   rm $FLAG/conf_arkime;
 fi

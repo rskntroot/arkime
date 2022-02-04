@@ -22,29 +22,32 @@ docker-compose up -d
 - traefik:v2.6.0 (in progress)
 
 ## Access
-> The application is available over http port 80 (default) through a webbrowser.
+> Arkime is available over http port 80 (default) through a webbrowser.
+> Arkime's authentication is turned off by default.
 
 ## Available roles
 
 ##### Viewer
-| Type | Field | Value |
-| ------ | ------ | ------ |
-| ENV | ARKIME_USER | root | 
-| ENV | ARKIME_PSWD | arkime-pswd |
-| ENV | ES_HOST | elasticsearch |
-| VOLUME | /opt/docker/arkime/log/ | /opt/arkime/local/log/ |
-| ENTRYPOINT | | /opt/arkime/local/bin/viewer.sh |
+| Type | Field | Value | optional |
+| ------ | ------ | ------ |------|
+| ENV | OFFLOAD_AUTH | false | true |
+| ENV | ARKIME_USER | root | true |
+| ENV | ARKIME_PSWD | arkime-pswd | true |
+| ENV | ES_HOST | elasticsearch | false | 
+| VOLUME | /opt/docker/arkime/log/ | /opt/arkime/local/log/ | false |
+| ENTRYPOINT | | /opt/arkime/local/bin/viewer.sh | false |
 
 ##### Import
-| Type | Field | Value |
-| ------ | ------ | ------ |
-| ENV | ARKIME_USER | root |
-| ENV | ARKIME_PSWD | arkime-pswd |
-| ENV | ES_HOST | elasticsearch |
-| ENV | ARKIME_VIEWER | viewer | 
-| VOLUME | /opt/docker/arkime/log/ | /opt/arkime/local/log/ |
-| VOLUME | /opt/docker/arkime/import | /import |
-| ENTRYPOINT | | /opt/arkime/local/bin/import.sh |
+| Type | Field | Value | optional |
+| ------ | ------ | ------ |------|
+| ENV | OFFLOAD_AUTH | false | true |
+| ENV | ARKIME_USER | root | true |
+| ENV | ARKIME_PSWD | arkime-pswd | true |
+| ENV | ES_HOST | elasticsearch | false |
+| ENV | ARKIME_VIEWER | viewer | false |
+| VOLUME | /opt/docker/arkime/log/ | /opt/arkime/local/log/ | false |
+| VOLUME | /opt/docker/arkime/import | /import | false |
+| ENTRYPOINT | | /opt/arkime/local/bin/import.sh | false | 
 
 ## View logs
 > After running docker-compose the /opt/arkime/local/log/ directory will appear with component logs.

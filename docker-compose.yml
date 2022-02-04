@@ -20,6 +20,14 @@ services:
   elasticsearch:
     image: elasticsearch:7.17.0
     hostname: elasticsearch
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.elastic.entrypoints=web
+      - traefik.http.routers.elastic.rule=Host(`elastic.rskdev.io`)
+      - traefik.http.routers.elastic.service=elastic@docker
+      - traefik.http.services.elastic.loadbalancer.server.port=9200
+#      - traefik.http.services.elastic.loadbalancer.sticky=true
+#      - traefik.http.services.elastic.loadbalancer.sticky.cookie.name=elastic-session-token
     environment:
       - discovery.type=single-node
     depends_on:
@@ -30,9 +38,15 @@ services:
   viewer:
     image: arkime:3.3.1-1
     hostname: viewer
+    labels: 
+      - traefik.enable=true
+      - traefik.http.routers.arkime.entrypoints=web
+      - traefik.http.routers.arkime.rule=Host(`arkime.rskdev.io`)
+      - traefik.http.routers.arkime.service=arkime@docker
+      - traefik.http.services.arkime.loadbalancer.server.port=8005
+#      - traefik.http.services.arkime.loadbalancer.sticky=true
+#      - traefik.http.services.arkime.loadbalancer.sticky.cookie.name=arkime-session-token
     environment:
-      - ARKIME_USER=root
-      - ARKIME_PSWD=arkime-pswd
       - ES_HOST=elasticsearch
     depends_on:
       - elasticsearch
@@ -46,8 +60,6 @@ services:
     image: arkime:3.3.1-1
     hostname: import
     environment:
-      - ARKIME_USER=root
-      - ARKIME_PSWD=arkime-pswd
       - ES_HOST=elasticsearch
       - ARKIME_VIEWER=viewer
     depends_on:

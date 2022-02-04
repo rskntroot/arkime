@@ -23,7 +23,7 @@ if [ -e "$FLAG/conf_arkime" ]; then
   $LOCAL_DIR/bin/config.sh;
 fi
 
-## INITIALIZE DATABASE AND CREATE ADMIN USER ##
+## INITIALIZE DATABASE ##
 #
 if [ -e "$FLAG/init_db" ]; then
   $LOCAL_DIR/bin/initdb.sh;
@@ -33,7 +33,14 @@ fi
 ## CREATE USER ##
 #
 if [ -e "$FLAG/conf_arkime" ]; then
-  $LOCAL_DIR/bin/addusr.sh;
+  ## OFFLOAD AUTH IF NECESSARY ##
+  #
+  if [ -z $OFFLOAD_AUTH ]; then
+    sed -i 's/passwordSecret/#passwordSecret/' $LOCAL_DIR/etc/config.ini;
+  else
+    $LOCAL_DIR/bin/addusr.sh;
+  fi
+
   rm $FLAG/conf_arkime;
 fi
 
