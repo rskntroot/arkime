@@ -2,59 +2,58 @@ version: '3'
 networks:
   internal:
     driver: bridge 
-  external:
-    driver: bridge
 
 services:
+  traefik:
+    image: traefik:v2.6.0
+    command:
+      - --configFile=/etc/traefik/traefik.yml
+    ports:
+      - 80:80
+      - 8080:8080
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - /opt/docker/arkime/traefik:/etc/traefik:ro
+    networks:
+      - internal
+
   elasticsearch:
-    image: docker.elastic.co/elasticsearch/elasticsearch:7.13.3
+    image: elasticsearch:7.17.0
     hostname: elasticsearch
     environment:
       - discovery.type=single-node
+    depends_on:
+      - traefik
     networks: 
       - internal
 
   viewer:
-    image: rskntroot/arkime:3.0.0-1
+    image: arkime:3.3.1-1
     hostname: viewer
     environment:
       - ARKIME_USER=root
       - ARKIME_PSWD=arkime-pswd
+      - ES_HOST=elasticsearch
     depends_on:
       - elasticsearch
     volumes:
-      - ./log:/arkime/log
+      - ./log:/opt/arkime/local/log
     networks:
       - internal
-    entrypoint: /arkime/bin/viewer.sh
+    entrypoint: /opt/arkime/local/bin/viewer.sh
 
   import:
-    image: rskntroot/arkime:3.0.0-1
+    image: arkime:3.3.1-1
     hostname: import
-    depends_on:
-      - elasticsearch
-      - viewer
     environment:
       - ARKIME_USER=root
       - ARKIME_PSWD=arkime-pswd
-    volumes:
-      - ./log:/arkime/log
-      - ./import:/import
-    networks:
-      - internal
-    entrypoint: /arkime/bin/import.sh
-
-  nginx:
-    image: nginx:mainline-alpine
-    hostname: nginx
-    volumes:
-      - ./conf.d:/etc/nginx/conf.d:ro
-      - ./ssl:/ssl:ro
-      - ./log:/var/log/nginx:rw
+      - ES_HOST=elasticsearch
+      - ARKIME_VIEWER=viewer
     depends_on:
       - viewer
-    networks: 
+    volumes:
+      - ./import:/import:rw
+    networks:
       - internal
-      - external
-    ports:
-      - 80:80
+    entrypoint: /opt/arkime/local/bin/import.sh
