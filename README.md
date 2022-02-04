@@ -4,7 +4,7 @@ Arkime on Docker with container role based on entrypoint scripts
 
 ## Run the Project
 
-> Change directory to the project folder: /opt/docker/arkime
+> Project requires directories in /opt/docker
 ````
 mkdir -p /opt/docker
 cd /opt/docker
@@ -32,7 +32,7 @@ docker-compose up -d
 | ENV | ARKIME_USER | root | 
 | ENV | ARKIME_PSWD | arkime-pswd |
 | ENV | ES_HOST | elasticsearch |
-| VOLUME | ~/arkime/log/ | /arkime/log/ |
+| VOLUME | /opt/docker/arkime/log/ | /opt/arkime/local/log/ |
 | ENTRYPOINT | | /opt/arkime/local/bin/viewer.sh |
 
 ##### Import
@@ -42,12 +42,12 @@ docker-compose up -d
 | ENV | ARKIME_PSWD | arkime-pswd |
 | ENV | ES_HOST | elasticsearch |
 | ENV | ARKIME_VIEWER | viewer | 
-| VOLUME | ~/arkime/log/ | /arkime/log/ |
-| VOLUME | ~/arkime/import | /import |
+| VOLUME | /opt/docker/arkime/log/ | /opt/arkime/local/log/ |
+| VOLUME | /opt/docker/arkime/import | /import |
 | ENTRYPOINT | | /opt/arkime/local/bin/import.sh |
 
 ## View logs
-> After running docker-compose the ~/arkime/log directory will appear with component logs.
+> After running docker-compose the /opt/arkime/local/log/ directory will appear with component logs.
 ```sh
 $ docker logs -f arkime_viewer_1
 $ docker logs -f arkime_import_1
